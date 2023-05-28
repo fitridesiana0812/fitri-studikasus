@@ -21,6 +21,9 @@
 
   <!-- Main CSS File -->
   <link href="assets/css/main2.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 
 </head>
 
@@ -60,186 +63,44 @@
     </div>
   </header><!-- End Header -->
 
-    <!-- ======= Menu Section ======= -->
-    <section id="crud" class="menu">
-      <div class="container" data-aos="fade-up">
-
-        <div class="section-header mt-3">
-          <p>Check Our <span>Domini Menu</span></p>
+  <section id="crud" class="dropdown">
+    <div class="container">       
+        <table class="display" id ="Table" >
+        <a href="create_menu.php" class="btn btn-primary mt-5">Tambah Menu</a>
+        <h3 class="fw-bold text-center mt-3 mb-4">Data Menu</h3>
+                <thead>
+                    <tr>
+                    <th class="text-center" style="font-size: 14px;">ID</th>
+                    <th class="text-center" style="font-size: 14px;">Nama Menu</th>
+                    <th class="text-center" style="font-size: 14px;">Kategori</th>
+                    <th class="text-center" style="font-size: 14px;">Harga</th>
+                    <th width= "300px" class="text-center" style="font-size: 14px;">Deskripsi</th>
+                    <th class="text-center" style="font-size: 14px;">Gambar</th>
+                    <th class="text-center" style="font-size: 14px;">Aksi</th>
+                    </tr>
+                </thead>
+                <?php
+                    include ('connect.php');
+                    $data_menu = mysqli_query($conn, "SELECT * FROM menu");
+                    while($menu = mysqli_fetch_array($data_menu)){
+                ?>
+                <tr>
+                    <td class="text-center" style="font-size: 13px;"><?php echo $menu['id_menu'] ?></td>
+                    <td class="text-center" style="font-size: 13px;"><?php echo $menu['nama'] ?></td>
+                    <td class="text-center" style="font-size: 13px;"><?php echo $menu['kategori'] ?></td>
+                    <td class="text-center" style="font-size: 13px;">Rp. <?php echo $menu['harga'] ?></td>
+                    <td align="justify" style="font-size: 13px;"><?php echo $menu['deskripsi'] ?></td>
+                    <td class="text-center"><img src="assets/img/menu1/<?php echo $menu['gambar'] ?>" class="menu-img img-fluid" alt="" style="width: 150px; height: auto;"></td>
+                    <td class="text-center">
+                    <a class="btn btn-warning" style="font-size: 13px;" href="edit_menu.php?id_menu=<?= $menu['id_menu']; ?>">Edit</a>
+                    <a class="btn btn-danger" style="font-size: 13px;" href="delete_menu.php?id_menu=<?= $menu['id_menu']; ?>">Delete</a>
+                </tr>
+                <?php 
+                    } 
+                ?>
+            </table>
         </div>
-
-        <ul class="nav nav-tabs d-flex justify-content-center" data-aos="fade-up" data-aos-delay="200">
-
-          <li class="nav-item">
-            <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#menu-starters">
-              <h4>Pizza</h4>
-            </a>
-          </li><!-- End tab nav item -->
-
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#menu-breakfast">
-              <h4>Burger</h4>
-            </a><!-- End tab nav item -->
-
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#menu-lunch">
-              <h4>Pasta</h4>
-            </a>
-          </li><!-- End tab nav item -->
-
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#menu-dinner">
-              <h4>Drink</h4>
-            </a>
-          </li><!-- End tab nav item -->
-
-        </ul>
-
-        <div class="tab-content" data-aos="fade-up" data-aos-delay="300">
-
-          <div class="tab-pane fade active show" id="menu-starters">
-
-            <div class="tab-header text-center">
-              <p>Menu</p>
-              <h3>Pizza</h3>
-            </div>
-
-            <div class="row gy-5">
-
-              <?php
-                include ('connect.php');
-                  $data_menu = mysqli_query($conn, "SELECT * FROM `menu` WHERE kategori = 'pizza'");
-                while($menu = mysqli_fetch_array($data_menu)){
-              ?>
-
-              <div class="col-lg-4 menu-item">
-                <a class="glightbox"><img src="assets/img/menu1/<?php echo $menu['gambar'] ?>" class="menu-img img-fluid" alt=""></a>
-                <h4><?php echo $menu['nama'] ?></h4>
-                <p align= "center" class="ingredients">
-                  <?php echo $menu['deskripsi'] ?>
-                </p>
-                <p class="price">
-                  Rp. <?php echo $menu['harga'] ?>
-                </p>
-              </div><!-- Menu Item -->
-              
-              <?php 
-              } 
-              ?>
-
-            </div>
-
-          </div><!-- End Pizza Menu Content -->
-
-          <div class="tab-pane fade" id="menu-breakfast">
-
-            <div class="tab-header text-center">
-              <p>Menu</p>
-              <h3>Burger</h3>
-            </div>
-
-            <div class="row gy-5">
-
-              <?php
-                include ('connect.php');
-                  $data_menu = mysqli_query($conn, "SELECT * FROM `menu` WHERE kategori = 'burger'");
-                while($menu = mysqli_fetch_array($data_menu)){
-              ?>
-
-              <div class="col-lg-4 menu-item">
-              <a class="glightbox"><img src="assets/img/menu1/<?php echo $menu['gambar'] ?>" class="menu-img img-fluid" alt=""></a>
-                <h4><?php echo $menu['nama'] ?></h4>
-                <p align= "center" class="ingredients">
-                  <?php echo $menu['deskripsi'] ?>
-                </p>
-                <p class="price">
-                  Rp. <?php echo $menu['harga'] ?>
-                </p>
-              </div><!-- Menu Item -->
-              
-              <?php 
-              } 
-              ?>
-
-            </div>
-
-          </div><!-- End Burger Menu Content -->
-
-          <div class="tab-pane fade" id="menu-lunch">
-
-            <div class="tab-header text-center">
-              <p>Menu</p>
-              <h3>Pasta</h3>
-            </div>
-
-            <div class="row gy-5">
-
-              <?php
-                include ('connect.php');
-                  $data_menu = mysqli_query($conn, "SELECT * FROM `menu` WHERE kategori = 'pasta'");
-                while($menu = mysqli_fetch_array($data_menu)){
-              ?>
-
-              <div class="col-lg-4 menu-item">
-              <a class="glightbox"><img src="assets/img/menu1/<?php echo $menu['gambar'] ?>" class="menu-img img-fluid" alt=""></a>
-                <h4><?php echo $menu['nama'] ?></h4>
-                <p align= "center" class="ingredients">
-                  <?php echo $menu['deskripsi'] ?>
-                </p>
-                <p class="price">
-                  Rp. <?php echo $menu['harga'] ?>
-                </p>
-              </div><!-- Menu Item -->
-              
-              <?php 
-              } 
-              ?>
-
-            </div>
-
-          </div><!-- End Pasta Menu Content -->
-
-          <div class="tab-pane fade" id="menu-dinner">
-
-            <div class="tab-header text-center">
-              <p>Menu</p>
-              <h3>Drink</h3>
-            </div>
-
-            <div class="row gy-5">
-
-              <?php
-                include ('connect.php');
-                  $data_menu = mysqli_query($conn, "SELECT * FROM `menu` WHERE kategori = 'minuman'");
-                while($menu = mysqli_fetch_array($data_menu)){
-              ?>
-
-              <div class="col-lg-4 menu-item">
-              <a class="glightbox"><img src="assets/img/menu1/<?php echo $menu['gambar'] ?>" class="menu-img img-fluid" alt=""></a>
-                <h4><?php echo $menu['nama'] ?></h4>
-                <p align= "center" class="ingredients">
-                  <?php echo $menu['deskripsi'] ?>
-                </p>
-                <p class="price">
-                  Rp. <?php echo $menu['harga'] ?>
-                </p>
-              </div><!-- Menu Item -->
-              
-              <?php 
-              } 
-              ?>
-
-            </div>
-
-            </div>
-          </div><!-- End Drink Menu Content -->
-
-        </div>
-
-      </div>
-    </section><!-- End Menu Section -->
-  </main><!-- End #main -->
-
+  </section >
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
 
@@ -322,3 +183,9 @@
 </body>
 
 </html>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Table').DataTable();
+    } );
+</script>

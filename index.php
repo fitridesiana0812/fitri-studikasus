@@ -180,6 +180,7 @@
                 <p class="price">
                   Rp. <?php echo $menu['harga'] ?>
                 </p>
+                <a class="btn-book-a-table" href="order.php">Order Menu</a>
               </div><!-- Menu Item -->
               
               <?php 
@@ -214,6 +215,7 @@
                 <p class="price">
                   Rp. <?php echo $menu['harga'] ?>
                 </p>
+                <a class="btn-book-a-table" href="order.php">Order Menu</a>
               </div><!-- Menu Item -->
               
               <?php 
@@ -248,6 +250,7 @@
                 <p class="price">
                   Rp. <?php echo $menu['harga'] ?>
                 </p>
+                <a class="btn-book-a-table" href="order.php">Order Menu</a>
               </div><!-- Menu Item -->
               
               <?php 
@@ -282,6 +285,7 @@
                 <p class="price">
                   Rp. <?php echo $menu['harga'] ?>
                 </p>
+                <a class="btn-book-a-table" href="order.php">Order Menu</a>
               </div><!-- Menu Item -->
               
               <?php 

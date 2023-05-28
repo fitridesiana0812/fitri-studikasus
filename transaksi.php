@@ -1,196 +1,142 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <title>Domini Restaurant-Studi Kasus</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script> 
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    </head>
+            <?php
+            include ('connect.php');
+                // Mengambil data menu dan harga dari database
+                $query = "SELECT nama, harga FROM menu";
+                $result = mysqli_query($conn, $query);
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+                // Membuat array data menu dan harga
+                $menuHarga = array();
+                while ($row = mysqli_fetch_assoc($result)) {
+                $menuHarga[$row['nama']] = $row['harga'];
+                }
+            ?>
+            <script>
+            function updateHarga() {
+                var menuSelect = document.getElementById("nama");
+                var hargaInput = document.getElementById("harga");
 
-  <title>Domini Restaurant-Studi Kasus</title>
+                // Mendapatkan harga berdasarkan pilihan menu
+                var harga = <?php echo json_encode($menuHarga); ?>[menuSelect.value];
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Amatic+SC:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+                // Menampilkan harga pada input harga
+                hargaInput.value = harga;
+            }
+            </script>
+    <body>   
+    <div class="container">
+        <a href="index.php" class="btn btn-primary mt-3">Kembali</a>
+        <a href="transaksi.php" class="btn btn-danger mt-3">Reset</a>
+        <h3 class="fw-bold mt-4 mb-4 text-center">Tambah Pesanan</h3>
+        <form method="POST">
+            <table cellpadding="10" cellspacing="0" class="table table-striped">
+            <tr>
+                <td>Nama Customer</td>
+                <td>:</td>
+                <td><input type="text" class="form-control" name="nama_customer"></td>
+            </tr>
+            <tr>
+                <td>Tanggal Transaksi</td>
+                <td>:</td>
+                <td><input type="date" class="form-control" name="tgl_transaksi"></td>
+            </tr>
+            <tr>
+                <td for="nama">Nama Menu</td>
+                <td>:</td>
+                <td>
+                    <select class="form-control" id="nama" name="nama" onchange="updateHarga()">
+                        <option value="">- Pilih -</option>
+                        <?php foreach ($menuHarga as $nama => $harga): ?>
+                            <option value="<?php echo $nama; ?>"><?php echo $nama; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td for="harga">Harga</td>
+                <td>:</td>
+                <td><input class="form-control" type="text" id="harga" name="harga" readonly></td>
+            </tr>
+            <tr>
+                <td>Jumlah Item Menu</td>
+                <td>:</td>
+                <td>
+                    <select class="form-control" name="qty">
+                        <option value="">- Jumlah -</option>
+                        <?php
+                            for($x=1;$x<=50;$x++){
+                        ?>
+                        <option value="<?php echo $x; ?>"><?php echo $x; ?></option>
+                        <?php
+                            }
+                        ?>
+                    </select>
+                </td>
+            </tr>
 
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-
-  <!-- Main CSS File -->
-  <link href="assets/css/main2.css" rel="stylesheet">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
-  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
-
-</head>
-
-<body>
-
-  <!-- ======= Header ======= -->
-  <header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="container d-flex align-items-center justify-content-between">
-
-      <a href="index.php" class="logo d-flex align-items-center me-auto me-lg-0">
-        <h1>Domini<span>.</span></h1>
-      </a>
-
-      <nav id="navbar" class="navbar">
-        <ul>
-          <li><a href="index.php#hero">Home</a></li>
-          <li><a href="index.php#about">About</a></li>
-          <li><a href="index.php#menu">Menu</a></li>
-          <li><a href="index.php#chefs">Chefs</a></li>
-          <li><a href="index.php#gallery">Gallery</a></li>
-          <li><a href="index.php#contact">Contact</a></li>
-          <li class="dropdown"><a href="#"><span>CRUD</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
-            <ul>
-              <li><a href="menu.php">Data Menu</a></li>
-              <li><a href="customer.php">Data Customer</a></li>
-              <li><a href="transaksi.php">Data Transaksi</a></li>
-            </ul>
-          </li>
-          
-        </ul>
-      </nav><!-- .navbar -->
-
-      <a class="btn-book-a-table" href="order.php">Order Menu</a>
-      <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
-      <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
-
-    </div>
-  </header><!-- End Header -->
-
-  <section id="crud" class="dropdown">
-    <div class="container">       
-        <table class="display" id ="Table" >
-        <a href="order.php" class="btn btn-primary mt-5">Tambah Order</a>
-        <h3 class="fw-bold text-center mt-3 mb-4">Data Transaksi</h3>
-                <thead>
-                    <tr>
-                    <th widht="50px" class="text-center">ID</th>
-                    <th widht="200px" class="text-center">Nama Customer</th>
-                    <th widht="300px" class="text-center">Nama Menu</th>
-                    <th widht="300px" class="text-center">Tanggal Transaksi</th>
-                    <th widht="200px" class="text-center">Jumlah Beli</th>
-                    <th widht="200px" class="text-center">Total</th>
-                    <th widht="200px" class="text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <?php
-                    include ('connect.php');
-                    $data_transaksi = mysqli_query($conn, 
-                      " SELECT customer.nama, transaksi.id_transaksi, 
-                      transaksi.tgl_transaksi, transaksi.jumlah, transaksi.total, menu.nama 
-                      AS nama_menu FROM customer
-                      INNER JOIN transaksi ON customer.id_customer = transaksi.id_customer
-                      INNER JOIN menu ON transaksi.id_menu = menu.id_menu;");
-                    while($transaksi = mysqli_fetch_array($data_transaksi)){
-                ?>
-                <tr>
-                    <td class="text-center"><?php echo $transaksi['id_transaksi'] ?></td>
-                    <td class="text-center"><?php echo $transaksi['nama'] ?></td>
-                    <td class="text-center"><?php echo $transaksi['nama_menu'] ?></td>
-                    <td class="text-center"><?php echo $transaksi['tgl_transaksi'] ?></td>
-                    <td class="text-center"><?php echo $transaksi['jumlah'] ?></td>
-                    <td class="">Rp. <?php echo $transaksi['total'] ?></td>
-                    <td class="text-center">
-                    <a class="btn btn-warning" href="edit_transaksi.php?id_transaksi=<?= $transaksi['id_transaksi']; ?>">Edit</a>
-                    <a class="btn btn-danger" href="delete_transaksi.php?id_transaksi=<?= $transaksi['id_transaksi']; ?>">Delete</a>
-                </tr>
-                <?php 
-                    } 
-                ?>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>
+                    <input class="btn btn-warning" type="submit" name="hitung" value="Hitung">
+                    <input class="btn btn-danger" type="reset" name="reset" value="Reset">
+                </td>
+            </tr>
             </table>
-        </div>
-  </section >
-  <!-- ======= Footer ======= -->
-  <footer id="footer" class="footer">
+        </form>
+        
 
-    <div class="container">
-      <div class="row gy-3">
-        <div class="col-lg-3 col-md-6 d-flex">
-          <i class="bi bi-geo-alt icon"></i>
-          <div>
-            <h4>Address</h4>
-            <p>
-              Jl. KHI No. 234, Surabaya <br>
-              Jawa Timur - Indonesia<br>
-            </p>
-          </div>
+    <hr />
+    <h3 class="fw-bold mt-4 mb-4 text-center">Hasil :</h3>
+    <!-- Coding PHP hitung total bayar ketik disini -->
 
-        </div>
+        <?php
+        if(isset($_POST['hitung'])){
+            $nama_customer = $_POST['nama_customer'];
+            $tgl_transaksi = $_POST['tgl_transaksi'];
+            $nama = $_POST['nama'];
+            $harga = $_POST['harga'];
+            $qty = $_POST['qty'];
+            $total = $harga * $qty;
+        ?>
 
-        <div class="col-lg-3 col-md-6 footer-links d-flex">
-          <i class="bi bi-telephone icon"></i>
-          <div>
-            <h4>Reservations</h4>
-            <p>
-              <strong>Phone :</strong> +1 5589 55488 55<br>
-              <strong>Email :</strong> info@domini.com<br>
-            </p>
-          </div>
-        </div>
+        <!-- Tampilan tabel -->
+        <table class="table text-center">
+            <thead>
+                <tr>
+                    <th>Nama Customer</th>
+                    <th>Nama Transaksi</th>
+                    <th>Nama Menu</th>
+                    <th>Harga</th>
+                    <th>Banyaknya</th>
+                    <th>Total Harga</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><?php echo $nama_customer; ?></td>
+                    <td><?php echo $tgl_transaksi; ?></td>
+                    <td><?php echo $nama; ?></td>
+                    <td>Rp. <?php echo number_format($harga, 0, ',', '.'); ?></td>
+                    <td><?php echo number_format($qty, 0, ',', '.'); ?></td>
+                    <td>Rp. <?php echo number_format($total, 0, ',', '.'); ?></td>
+                </tr>
+            </tbody>
+        </table>
 
-        <div class="col-lg-3 col-md-6 footer-links d-flex">
-          <i class="bi bi-clock icon"></i>
-          <div>
-            <h4>Opening Hours</h4>
-            <p>
-            <strong>Mon-Sat :</strong> 11 AM - 23 PM<br>
-            <strong>Sunday :</strong> Closed<br>
-            </p>
-          </div>
-        </div>
+        <?php } ?>
 
-        <div class="col-lg-3 col-md-6 footer-links">
-          <h4>Follow Us</h4>
-          <div class="social-links d-flex">
-            <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-            <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-            <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-            <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
-          </div>
-        </div>
-
-      </div>
+    </form>
     </div>
-
-    <div class="container">
-      <div class="copyright">
-        &copy; Copyright <strong><span>Domini</span></strong>. All Rights Reserved
-      </div>
-      <div class="credits">
-        Designed by Fitri Desiana Afani</a>
-      </div>
-    </div>
-
-  </footer><!-- End Footer -->
-  <!-- End Footer -->
-
-  <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <div id="preloader"></div>
-
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-
-  <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
-
 </body>
-
 </html>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#Table').DataTable();
-    } );
-</script>
